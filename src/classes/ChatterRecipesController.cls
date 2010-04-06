@@ -230,6 +230,10 @@ public class ChatterRecipesController
 	{
 		ChatterRecipesController crc = new ChatterRecipesController();
 		
+		//add at least one post
+		crc.recipeFiveAddAFeedPost = 'Test Post';
+		crc.recipeFiveAddPost();
+		
 		System.assert(crc.getRecipeSevenNewsFeed().size() > 0);
 	}
 	
@@ -261,6 +265,10 @@ public class ChatterRecipesController
     static testMethod void testRecipeEight()
 	{
 		ChatterRecipesController crc = new ChatterRecipesController();
+		
+		//add at least one post
+		crc.recipeFiveAddAFeedPost = 'Test Post';
+		crc.recipeFiveAddPost();
 		
 		System.assert(crc.getRecipeEightTopPosters().size() > 0);
 	}
