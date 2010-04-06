@@ -93,8 +93,7 @@ public class ChatterTestHelper
 	
 	//-------------- entities ----------------------
 	/**
-	 * should only be used once within the context of a testmethod, otherwise the system
-	 * will throw duplicate exceptions for subscribers that already exist
+	 * 
 	 */
 	public static void followEntities(List<SObject> sobjs, String userid)
 	{
