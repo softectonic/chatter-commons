@@ -40,13 +40,11 @@ public class ChatterRecipesController
     {
         
           // All users who are following us
-        List<EntitySubscription> followers = [select id, subscriberid, subscriber.name
+        List<EntitySubscription> followers = [
+        	select id, subscriberid, subscriber.name
             from EntitySubscription
             where parentid = :UserInfo.getUserId()
             order by subscriber.name LIMIT 100];
-        
-          for( EntitySubscription es : followers)
-            System.debug(LoggingLevel.INFO, es.subscriber.name+' is following me.');
         
         return followers;
     }
@@ -81,23 +79,13 @@ public class ChatterRecipesController
      public List<EntitySubscription> getRecipeFourGetFollowing()
     {
        // Everyone we're following
-        EntitySubscription[] followingES = [select id, parentid, subscriberid, parent.name
+        List<EntitySubscription> followingES = [
+        	select id, parentid, subscriberid, parent.name
             from EntitySubscription
             where subscriberid = :UserInfo.getUserId()
             order by parent.name LIMIT 100];
         
-        List<EntitySubscription> following = new List<EntitySubscription> ();
-        
-        for( EntitySubscription es : followingES )
-        {
-            if( ('' + es.parentid).substring(0,3) == '005' ) // users only
-            {
-                System.debug(LoggingLevel.INFO, 'Im following: '+es.parent.name);
-                following.add(es);       
-            }
-        }
-        
-       return following;
+       return followingES;
     }
     
     static testMethod void testRecipeFour()
