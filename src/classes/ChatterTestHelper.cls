@@ -104,7 +104,10 @@ public class ChatterTestHelper
 				etys.add(new EntitySubscription(parentid=so.id, subscriberid=userid));
 		
 		if(!etys.isEmpty())
-			Database.SaveResult[] lsr = Database.insert(etys, false); //dont throw errors in results already exist
+		{
+			//dont throw errors in results already exist
+			Database.SaveResult[] lsr = Database.insert(etys, false); 
+		}
 		
 	}
 	

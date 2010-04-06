@@ -125,7 +125,8 @@ public class ChatterRecipesController
             fpost.Body = recipeFiveAddAFeedPost;
             insert fpost;
 		 
-		 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'FeedPost ID is:'+fpost.id));
+		 ApexPages.addMessage(new ApexPages.Message(
+		 	ApexPages.Severity.INFO, 'FeedPost ID is:'+fpost.id));
 	
 		recipeFiveAddAFeedPost = '';
 		
@@ -156,18 +157,20 @@ public class ChatterRecipesController
 	
 	public void recipeSixAddAComment()
 	{
-		//need to pass in the feedpost id we captured from recipe 5 (copy n paste it from recipe 5 tab)
+		//need to pass in the feedpost id we captured from recipe 5 
+		//(copy n paste it from recipe 5 tab)
 		 List<UserFeed> myfeed = [SELECT Id, FeedPostId
-		 						  FROM UserFeed WHERE feedpostid = :recipeSixFPostID LIMIT 1];
+		 						  FROM UserFeed 
+		 						  WHERE feedpostid = :recipeSixFPostID LIMIT 1];
 		 
 		FeedComment fcomment = new FeedComment();
         fcomment.FeedItemId = myfeed.get(0).id; 
         fcomment.CommentBody = recipeSixComment;
         insert fcomment; 
 		 
-		
 		recipeSixComment = '';
-		 ApexPages.addMessage(new ApexPages.Message(ApexPages.Severity.INFO, 'Comment Added'));
+		 ApexPages.addMessage(
+		 	new ApexPages.Message(ApexPages.Severity.INFO, 'Comment Added'));
 	
 	}
 	
@@ -198,19 +201,20 @@ public class ChatterRecipesController
     //------------------------ RECIPE 7 ----------------------------------------------
     public List<NewsFeed> getRecipeSevenNewsFeed()  {
 
-	     List<NewsFeed> myfeed = [SELECT Id, Type, 
-		                            CreatedById, CreatedBy.FirstName, CreatedBy.LastName, CreatedDate,
-		                            ParentId, Parent.Name, 
-	                                    FeedPostId, FeedPost.Body, FeedPost.Title, FeedPost.CreatedById,
-		                            (SELECT Id, FieldName, OldValue, NewValue 
-	                                          FROM FeedTrackedChanges ORDER BY Id DESC), 
-		                            (SELECT Id, CommentBody, CreatedDate,
-		                                    CreatedById, CreatedBy.FirstName, CreatedBy.LastName
-		                                    FROM FeedComments ORDER BY CreatedDate DESC, ID DESC LIMIT 10)
-		                             FROM NewsFeed
-		                             WHERE FeedPost.Body != ''
-		                             ORDER BY CreatedDate DESC, ID DESC
-		                             LIMIT 50];
+	     List<NewsFeed> myfeed = 
+	     	[SELECT Id, Type, 
+            CreatedById, CreatedBy.FirstName, CreatedBy.LastName, CreatedDate,
+            ParentId, Parent.Name, 
+                FeedPostId, FeedPost.Body, FeedPost.Title, FeedPost.CreatedById,
+            (SELECT Id, FieldName, OldValue, NewValue 
+                      FROM FeedTrackedChanges ORDER BY Id DESC), 
+            (SELECT Id, CommentBody, CreatedDate,
+                    CreatedById, CreatedBy.FirstName, CreatedBy.LastName
+                    FROM FeedComments ORDER BY CreatedDate DESC, ID DESC LIMIT 10)
+             FROM NewsFeed
+             WHERE FeedPost.Body != ''
+             ORDER BY CreatedDate DESC, ID DESC
+             LIMIT 50];
 	       return myfeed;
 	}
 	
@@ -261,5 +265,43 @@ public class ChatterRecipesController
 		System.assert(crc.getRecipeEightTopPosters().size() > 0);
 	}
     
+    public List<AccountFeed> getRecipeNineFeedTrackedChanges()
+    {
+        List<AccountFeed> af = [Select id, Parent.Name,
+        	(SELECT Id, FieldName, NewValue FROM FeedTrackedChanges) 
+        	from AccountFeed LIMIT 100];
+        
+        for(AccountFeed f : af)
+        {
+            System.debug(f.FeedTrackedChanges.size());
+            
+            for(Integer i = 0; i < f.feedTrackedChanges.size(); i++)
+                System.debug(LoggingLevel.INFO, 
+                	'Change on '+f.feedTrackedChanges.get(i).fieldName+
+                    ' is '+f.feedTrackedChanges.get(i).NewValue );
+        }   
+        return af;
+     
+    }
+    
+    static testMethod void testRecipeNine()
+	{
+		ChatterRecipesController crc = new ChatterRecipesController();
+		
+		List<Account> accts = new List<Account>();
+		
+		for(Account a : [select id, billingcity from Account LIMIT 10])
+		{
+			a.billingCity = 'bedrock';
+			accts.add(a);
+		}
+		
+		System.assert(accts.size() > 0);
+		
+		if(!accts.IsEmpty())
+			update accts;
+		
+		System.assert(crc.getRecipeNineFeedTrackedChanges().size() > 0);
+	}
     
 }
