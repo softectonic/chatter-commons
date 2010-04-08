@@ -214,6 +214,7 @@ public class ChatterRecipesController
              FROM NewsFeed
              ORDER BY CreatedDate DESC, ID DESC
              LIMIT 50];
+   
 	       return myfeed;
 	}
 	
