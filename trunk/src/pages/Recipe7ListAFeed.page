@@ -36,9 +36,10 @@
                  <apex:facet name="header">Comments</apex:facet>
                   <p>     
                <apex:Repeat value="{!f.FeedComments}" var="c">
-                	<apex:outputText value="{!c.CreatedBy.FirstName}" id="cfname"/> said  
-                            <apex:outputText value="{!c.CommentBody}" id="comment-repeat"/><br/>
-                 </apex:Repeat>
+               		<apex:outputText value="{!c.CreatedBy.FirstName}" id="cfname"/> said
+               		<apex:outputText value="{!c.CommentBody}" id="comment-repeat"/>
+               </apex:Repeat>
+                
                </p>
             </apex:column>
     </apex:pageBlockTable>
