@@ -205,14 +205,13 @@ public class ChatterRecipesController
 	     	[SELECT Id, Type, 
             CreatedById, CreatedBy.FirstName, CreatedBy.LastName, CreatedDate,
             ParentId, Parent.Name, 
-                FeedPostId, FeedPost.Body, FeedPost.Title, FeedPost.CreatedById,
+                FeedPostId, FeedPost.Body, FeedPost.Title, FeedPost.CreatedById, FeedPost.LinkUrl,
             (SELECT Id, FieldName, OldValue, NewValue 
                       FROM FeedTrackedChanges ORDER BY Id DESC), 
             (SELECT Id, CommentBody, CreatedDate,
                     CreatedById, CreatedBy.FirstName, CreatedBy.LastName
                     FROM FeedComments ORDER BY CreatedDate DESC, ID DESC LIMIT 10)
              FROM NewsFeed
-             WHERE FeedPost.Body != ''
              ORDER BY CreatedDate DESC, ID DESC
              LIMIT 50];
 	       return myfeed;
