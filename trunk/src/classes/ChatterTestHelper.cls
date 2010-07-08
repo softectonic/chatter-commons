@@ -234,4 +234,41 @@ public class ChatterTestHelper
 	{
 		System.assert(ChatterTestHelper.setupAccountDataAndFollowers(50, 30) != null);
 	}
+	
+		public static User createTestUser() {
+		Profile p = [Select Id, Name from Profile where Name = 'System Administrator'];
+		return TestUtility.createTestUser(p);
+	}
+	
+	public static User createTestUser(Profile p) {
+		
+		String namePrefix = createRandomWord();
+		
+		AggregateResult[] userCount = [Select count(id) userCount From user where username like :namePrefix];
+		
+		Object users = userCount[0].get('userCount');
+		
+		User testUser = new User();
+		testUser.Email = 'test@test.com';
+		testUser.Username = namePrefix+users+'@testuser.com';
+
+		testUser.LastName = 'test';
+		testUser.Alias = 'test';
+		testUser.ProfileId = p.Id;
+		testUser.LanguageLocaleKey = 'en_US';
+		testUser.LocaleSidKey = 'en_US';
+		testUser.TimeZoneSidKey = 'America/Chicago';
+		testUser.EmailEncodingKey = 'UTF-8';
+		insert testUser;
+		return testUser;
+	}
+	
+	public static String createRandomWord() {
+    	
+    	String ret = 'word' + math.rint(math.random() * 100000);
+    	
+    	return ret;
+    	
+    }
+	
 }
